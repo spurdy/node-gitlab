@@ -11,7 +11,7 @@ import pkg from './package.json';
 export default [
   // Browser-friendly UMD build
   {
-    input: 'src/index.ts',
+    input: 'src/core/index.ts',
     output: {
       file: pkg.browser,
       name: 'node-gitlab',
@@ -41,7 +41,7 @@ export default [
 
   // CommonJS (for Node) (for bundlers) build.
   {
-    input: 'src/index.ts',
+    input: 'src/core/index.ts',
     output: {
       file: pkg.main,
       format: 'cjs',
@@ -57,13 +57,30 @@ export default [
 
   // ES module (for bundlers) build.
   {
-    input: 'src/index.ts',
+    input: 'src/core/index.ts',
     output: {
       file: pkg.module,
       format: 'es',
     },
     external: [...Object.keys(pkg.dependencies)],
     plugins: [
+      ts({ typescript }),
+      terser(),
+    ],
+  },
+
+  // CLI build
+  {
+    input: 'src/cli/gitlab.ts',
+    output: {
+      file: pkg.bin.gitlab,
+      format: 'cjs',
+    },
+    external: [...Object.keys(pkg.dependencies)],
+    plugins: [
+      json(),
+      globals(),
+      builtins(),
       ts({ typescript }),
       terser(),
     ],
