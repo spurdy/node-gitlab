@@ -24,10 +24,16 @@ class Repositories extends BaseService {
     return RequestHelper.get(this, `projects/${pId}/repository/merge_base`, { refs, ...options });
   }
 
-  showArchive(projectId: ProjectId, options?: { sha: string } & Sudo) {
+  showArchive(
+    projectId: ProjectId, 
+    options?: { 
+      sha: string, format?: 'tar.gz' | 'tar.bz2' | 'tbz' | 'tbz2' | 'tb2' | 'bz2' | 'tar' | 'zip'
+    } & Sudo
+  ) {
     const pId = encodeURIComponent(projectId);
+    let format = options && options.hasOwnProperty('format') ? `.${options.format}` : '';
 
-    return RequestHelper.get(this, `projects/${pId}/repository/archive`, options);
+    return RequestHelper.get(this, `projects/${pId}/repository/archive${format}`, options);
   }
 
   showBlob(projectId: ProjectId, sha: string, options?: Sudo) {
