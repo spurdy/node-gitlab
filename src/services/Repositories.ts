@@ -31,9 +31,13 @@ class Repositories extends BaseService {
     } & Sudo
   ) {
     const pId = encodeURIComponent(projectId);
-    let format = options && options.hasOwnProperty('format') ? `.${options.format}` : '';
+    if (options && options.hasOwnProperty('format')) {
+      let format = options.format;
+      delete options.format;
+      return RequestHelper.get(this, `projects/${pId}/repository/archive.${format}`, options);
+    }
 
-    return RequestHelper.get(this, `projects/${pId}/repository/archive${format}`, options);
+    return RequestHelper.get(this, `projects/${pId}/repository/archive`, options);
   }
 
   showBlob(projectId: ProjectId, sha: string, options?: Sudo) {
